@@ -24,8 +24,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 error_reporting( E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_ERROR | E_WARNING | E_PARSE | E_USER_ERROR | E_USER_WARNING | E_RECOVERABLE_ERROR );
 
 
-// require sso php file
+/* add sso begin */
 require_once( ABSPATH . 'sso.php');
+/* add sso end */
 
 /*
  * If wp-config.php exists in the WordPress root, or if it exists in the root and wp-settings.php

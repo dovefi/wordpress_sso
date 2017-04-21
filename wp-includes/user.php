@@ -2484,6 +2484,7 @@ function wp_get_users_with_no_role() {
  * @return WP_User Current WP_User instance.
  */
 function _wp_get_current_user() {
+    //error_log("excute get current user");
 	global $current_user;
 
 	if ( ! empty( $current_user ) ) {

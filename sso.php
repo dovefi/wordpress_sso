@@ -21,7 +21,7 @@ function s_redirect_sso() {
 function s_sso_logout(){
     global $sso_logout;
     $token = $_COOKIE['sso_token'];
-    error_log("excute sso logout ... ");
+    error_log("excute sso logout ..token:." . $token);
     for ($i=0;$i<3;$i++) {
         try {
             file_get_contents($sso_logout."?token=".$token);
@@ -40,7 +40,7 @@ function s_sso_logout(){
  * @param string $token
  * @return number[]|string[]|string[]|NULL[]|number[]|NULL[]
  */
-function s_get_uInfo($token){
+function s_get_uInfo($token = ''){
     global $sso_info;
     error_log("excute get_uinfo ... token : " . $token);
     $res=nil;
@@ -171,7 +171,57 @@ function s_wp_signon( $u_exist = null, $secure_cookie = '' ) {
 }
 
 /**
- * 
+ * check whether user log sso or not
+ */
+function s_check_login($ctoken = "") { 
+    $token = $ctoken;
+    error_log("token : " . $token);
+    $result = s_get_uInfo($token);
+    if ($result['code'] != 0) {
+        error_log('get user info code is :' . $result['code'] . 'redirect to sso login and clear cookie');
+        s_redirect_sso();
+        //wp_clear_auth_cookie(); 
+        exit();
+    } else {
+        error_log("user account : " . $result['usr']);
+        global $wpdb;
+        $query_name = 'kx' . $result['usr'];
+        $u_exist = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->users WHERE user_login = %s", $query_name));
+        //$u_exist = $wpdb->get_row( $wpdb->prepare("SELECT * FROM $wpdb->users WHERE user_login = %s", "dovefi") );
+        if ($u_exist != null){
+            error_log("user is exist,user_email : " . $u_exist->user_email); 
+        } else {
+            error_log("user is no exist");
+            // because login name must include character , so add 'kx' prefix
+            $u_create_name = 'kx' . $result['usr'];
+            $u_create_pwd = '';
+            $u_create_email = $u_create_name . '@unset.com';
+            $u_create_id = wpmu_create_user($u_create_name, $u_create_pwd, $u_create_email);
+            if ( ! $u_create_id ) {
+                error_log("add user fail .....");
+                //$add_user_errors = new WP_Error( 'add_user_fail', __( 'Cannot add user.' ) );
+                return null;
+            } else {
+                // Fires after a new user has been created
+                $u_exist = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->users WHERE user_login = %s", $u_create_name));
+                do_action( 'network_user_new_created_user', $u_create_id );
+    
+                // create site for new user
+                $blog = array(
+                    'domain' => $u_create_name,
+                    'title' => $u_create_name . "blog",
+                    'email' => $u_create_email,
+                );
+                s_create_site($blog);
+            }
+    
+        }
+        return $u_exist;
+    }
+}
+
+/**
+ * auto create site when user add success
  * @param array $s_blog
  */
 function s_create_site($s_blog = array()) {

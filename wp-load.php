@@ -24,9 +24,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 error_reporting( E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_ERROR | E_WARNING | E_PARSE | E_USER_ERROR | E_USER_WARNING | E_RECOVERABLE_ERROR );
 
 
-/* add sso begin */
+// require sso php file
 require_once( ABSPATH . 'sso.php');
-/* add sso end */
 
 /*
  * If wp-config.php exists in the WordPress root, or if it exists in the root and wp-settings.php
@@ -95,4 +94,5 @@ if ( file_exists( ABSPATH . 'wp-config.php') ) {
 	$die .= '<p><a href="' . $path . '" class="button button-large">' . __( "Create a Configuration File" ) . '</a>';
 
 	wp_die( $die, __( 'WordPress &rsaquo; Error' ) );
+	
 }

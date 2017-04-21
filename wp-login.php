@@ -388,9 +388,10 @@ $errors = new WP_Error();
 if ( isset($_GET['key']) )
 	$action = 'resetpass';
 
-// validate action so as to default to the login screen
-if ( !in_array( $action, array( 'postpass', 'logout', 'lostpassword', 'retrievepassword', 'resetpass', 'rp', 'register', 'login' ), true ) && false === has_filter( 'login_form_' . $action ) )
-	$action = 'login';
+// validate action so as to default to the login screen 
+//if ( !in_array( $action, array( 'postpass', 'logout', 'lostpassword', 'retrievepassword', 'resetpass', 'rp', 'register', 'login' ), true ) && false === has_filter( 'login_form_' . $action ) )
+if ( !in_array( $action, array( 'check', 'postpass', 'logout', 'lostpassword', 'retrievepassword', 'resetpass', 'rp', 'register', 'login' ), true ) && false === has_filter( 'login_form_' . $action ) )	
+    $action = 'login';
 
 nocache_headers();
 
@@ -464,7 +465,7 @@ case 'postpass' :
 	exit();
 
 case 'logout' :
-	check_admin_referer('log-out');
+	//check_admin_referer('log-out');
 
 	$user = wp_get_current_user();
 	
@@ -756,13 +757,74 @@ case 'register' :
 login_footer('user_login');
 break;
 
+/* sso join begin.................................................................. */
+case 'check': 
+    /* 
+     * php 获取request payload 的数据的方式是通过 file_get_contents('php://input')
+     *  */ 
+    error_log("do check action....token is:" . $_REQUEST['ctoken'] . "  refresh_url :" . $_SERVER['HTTP_REFERER']);
+    $refresh_url = "";
+    if (!empty($_SERVER['HTTP_REFERER'])) {
+        $refresh_url = $_SERVER['HTTP_REFERER'];
+    }
+    
+    if ($_REQUEST['ctoken'] != 'undefined') {
+        error_log("ctoken:" . $_REQUEST['ctoken']);
+        if (empty($_COOKIE['sso_token'])) {
+            error_log("sso token is empty ,redirect to sso"); 
+        } elseif ($_COOKIE['sso_token'] != $_REQUEST['ctoken']) {
+            error_log("cookie token != ctoken"); 
+        } else {
+            error_log("cookie token == ctoken");
+        }
+        if (!is_user_logged_in()) {
+            error_log("user is not login");
+            setcookie( "sso_token", $_REQUEST['ctoken'], 0, SITECOOKIEPATH, COOKIE_DOMAIN, $secure );
+            $u_exist = s_check_login($_REQUEST['ctoken']);
+            $user = s_wp_signon($u_exist,""); 
+            //sleep(10); 
+            //wp_redirect($refresh_url,301);
+            //s_redirect_sso();
+            exit(); 
+        } elseif ($_COOKIE['sso_token'] != $_REQUEST['ctoken']) {
+            error_log("user is login but token is wrong");
+            setcookie( "sso_token", $_REQUEST['ctoken'], 0, SITECOOKIEPATH, COOKIE_DOMAIN, $secure );
+            error_log("cookie:" . $_COOKIE['sso_token']);
+            $u_exist = s_check_login($_REQUEST['ctoken']);
+            $user = s_wp_signon($u_exist,"");
+            //sleep(10); 
+            //wp_redirect($refresh_url,301);
+            exit();
+        } else {
+            error_log("check user login status: logged in");
+        }
+    } else {
+        $TAG = "logout";
+        error_log("ctoken is not set");
+        $user = wp_get_current_user();  
+        wp_logout();
+        setcookie( "sso_token",$TAG, 0, SITECOOKIEPATH, COOKIE_DOMAIN, $secure );
+        if ( ! empty( $_REQUEST['redirect_to'] ) ) {
+            $redirect_to = $requested_redirect_to = $_REQUEST['redirect_to'];
+        } else {
+            $redirect_to = 'wp-login.php?loggedout=true';
+            $requested_redirect_to = '';
+        } 
+        $redirect_to = apply_filters( 'logout_redirect', $redirect_to, $requested_redirect_to, $user );
+        wp_safe_redirect( $redirect_to );
+        exit();
+        
+        break;
+    }
+    
+    break;
 case 'login' :
-default: 
-/* sso join begin............................. */
+default:
+    error_log("request token : " . $_REQUEST['token']);
     // redirect to sso
     $u_exist = null;
-    if ( !empty($_REQUEST['token'])) {
-        setcookie('sso_token',$_REQUEST['token']);
+    if ( isset($_REQUEST['token'])) {
+        setcookie( "sso_token", $_REQUEST['token'], 0, SITECOOKIEPATH, COOKIE_DOMAIN, $secure );
     }
     if (empty($_COOKIE['sso_token'])) {
         error_log("sso token is empty ,redirect to sso");
@@ -771,12 +833,11 @@ default:
     } else {
         //$token = $_REQUEST['token'];
         $token = $_COOKIE['sso_token'];
-        error_log("token : " . $token);
+        error_log("cookie token : " . $token);
         $result = s_get_uInfo($token);
         if ($result['code'] != 0) {
             error_log('get user info code is :' . $result['code'] . 'redirect to sso login and clear cookie');
-            s_redirect_sso();
-            wp_clear_auth_cookie();
+            s_redirect_sso(); 
             exit();
         } else {
             error_log("user account : " . $result['usr']);

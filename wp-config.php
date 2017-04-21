@@ -1,3 +1,36 @@
+<script src='http://sso.kuxiao.cn/sso/api/uinfo.js'></script>
+<script src='/wordpress/jquery-3.2.1.min.js'></script>
+<script> 
+var TAG = "logout";
+var host = 'http://192.168.3.12/wordpress/wp-login.php'; 
+var xmlHttp = new XMLHttpRequest(); 
+var getCookie = function(name) {
+	var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+	if(arr=document.cookie.match(reg))
+	return unescape(arr[2]);
+	else
+	return null;	
+}
+if(typeof(UINFO['token']) == "undefined") { 
+ 	url = host+'?action=check&ctoken='+'undefined';	
+} else { 
+ 	url = url = host+'?action=check&ctoken='+UINFO['token'];
+}
+xmlHttp.open("POST", url, true);
+xmlHttp.send();
+//alert(document.cookie);
+token = getCookie("sso_token");
+
+if(typeof(UINFO['token']) == "undefined") {
+	if(token != TAG) {
+		setTimeout("window.location.reload()",1000);
+	}
+} else {
+	if(token != UINFO['token']) {
+		setTimeout("window.location.reload()",1000);
+	}
+}
+</script> 
 <?php
 /**
  * WordPress基础配置文件。

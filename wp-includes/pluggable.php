@@ -1263,7 +1263,8 @@ if ( !function_exists('wp_safe_redirect') ) :
  * @param string $location The path to redirect to.
  * @param int    $status   Status code to use.
  */
-function wp_safe_redirect($location, $status = 302) { 
+function wp_safe_redirect($location, $status = 302) {
+
 	// Need to look at the URL the way it will end up in wp_redirect()
 	$location = wp_sanitize_redirect($location);
 

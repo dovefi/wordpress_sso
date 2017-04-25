@@ -82,14 +82,13 @@ function wp_signon( $credentials = array(), $secure_cookie = '' ) {
 
 	add_filter('authenticate', 'wp_authenticate_cookie', 30, 3);
 
-	
-	/* 用户登录验证 */
 	$user = wp_authenticate($credentials['user_login'], $credentials['user_password']);
 
 	if ( is_wp_error($user) ) {
 		if ( $user->get_error_codes() == array('empty_username', 'empty_password') ) {
 			$user = new WP_Error('', '');
 		}
+
 		return $user;
 	}
 
@@ -117,7 +116,6 @@ function wp_signon( $credentials = array(), $secure_cookie = '' ) {
  * @return WP_User|WP_Error WP_User on success, WP_Error on failure.
  */
 function wp_authenticate_username_password($user, $username, $password) {
-    error_log("user.php : func wp_authenticate_username_password : " . $username . "===" . $password);
 	if ( $user instanceof WP_User ) {
 		return $user;
 	}
@@ -2484,7 +2482,6 @@ function wp_get_users_with_no_role() {
  * @return WP_User Current WP_User instance.
  */
 function _wp_get_current_user() {
-    //error_log("excute get current user");
 	global $current_user;
 
 	if ( ! empty( $current_user ) ) {

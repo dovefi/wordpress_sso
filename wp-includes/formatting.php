@@ -5091,7 +5091,7 @@ function _print_emoji_detection_script() {
 		<script src="http://sso.kuxiao.cn/sso/api/uinfo.js"></script>
 		<script> 
             var TAG = "logout";
-            var host = "http://192.168.3.12/wordpress/wp-login.php"; 
+            var host = "http://wp.dev.gdy.io/wp2/wp-login.php"; 
             var xmlHttp = new XMLHttpRequest(); 
             var getCookie = function(name) {
             	var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");

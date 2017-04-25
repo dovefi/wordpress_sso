@@ -722,7 +722,6 @@ function wpmu_signup_user( $user, $user_email, $meta = array() ) {
 	$key = substr( md5( time() . wp_rand() . $user_email ), 0, 16 );
 	$meta = serialize($meta);
 
-	error_log("ms-function create user. name:" . $user . "  email:" . $user_email);
 	$wpdb->insert( $wpdb->signups, array(
 		'domain' => '',
 		'path' => '',

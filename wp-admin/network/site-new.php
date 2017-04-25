@@ -40,11 +40,11 @@ if ( isset($_REQUEST['action']) && 'add-site' == $_REQUEST['action'] ) {
 	$domain = '';
 	if ( preg_match( '|^([a-zA-Z0-9-])+$|', $blog['domain'] ) )
 		$domain = strtolower( $blog['domain'] );
-		error_log("site-new.php : blog['domain'] name " . $blog['domain']);
-        error_log("site-new.php : domain name $domain");
+
 	// If not a subdomain install, make sure the domain isn't a reserved word
 	if ( ! is_subdomain_install() ) {
-		$subdirectory_reserved_names = get_subdirectory_reserved_names(); 
+		$subdirectory_reserved_names = get_subdirectory_reserved_names();
+
 		if ( in_array( $domain, $subdirectory_reserved_names ) ) {
 			wp_die(
 				/* translators: %s: reserved names list */

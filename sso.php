@@ -1,7 +1,6 @@
 <?php
 
-//$sso_from="http://wp.dev.gdy.io/wordpress";
-$sso_from="http://192.168.3.12/wordpress/wp-login.php";
+$sso_from="http://wp.dev.gdy.io/wp2/wp-login.php";
 $sso_login="http://sso.kuxiao.cn/sso";
 $sso_info="http://sso.kuxiao.cn/sso/api/uinfo";
 $sso_logout="http://sso.kuxiao.cn/sso/api/logout";

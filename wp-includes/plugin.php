@@ -196,11 +196,10 @@ function apply_filters( $tag, $value ) {
 
 	if ( empty($args) )
 		$args = func_get_args();
-// 		error_log("plugin.php: func apply_filters : " . count($args[2]));
+
 	// don't pass the tag name to WP_Hook
 	array_shift( $args );
-    //error_log('plugin.php: func apply_filters $tag : ' . $tag);
-    //error_log('plugin.php: func apply_filters $value : ' . $value);
+
 	$filtered = $wp_filter[ $tag ]->apply_filters( $value, $args );
 
 	array_pop( $wp_current_filter );

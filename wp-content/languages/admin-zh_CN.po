@@ -925,7 +925,7 @@ msgstr "协调世界时（%1$s）为%2$s。"
 msgid "There is a pending change of the admin email to %s."
 msgstr "您即将修改管理电子邮件地址为%s。"
 
-#: wp-admin/install.php:390
+#: wp-admin/install.php:376
 msgid "WordPress has been installed. Thank you, and enjoy!"
 msgstr "WordPress安装完成。谢谢！"
 
@@ -3695,19 +3695,19 @@ msgstr "菜单可在您的主题指定的位置显示，或通过<a href=\"%1$s\
 msgid "Your theme does not natively support menus, but you can use them in sidebars by adding a &#8220;Custom Menu&#8221; widget on the <a href=\"%s\">Widgets</a> screen."
 msgstr "当前的主题未提供原生的自定义菜单支持，您可以通过在<a href=\"%s\">小工具</a>添加“自定义菜单”小工具来在侧栏上显示。"
 
-#: wp-admin/install.php:369
+#: wp-admin/install.php:365
 msgid "Sorry, that isn&#8217;t a valid email address. Email addresses look like <code>username@example.com</code>."
 msgstr "抱歉，电子邮件地址无效。形如<code>username@example.com</code>的才是电子邮件地址。"
 
-#: wp-admin/install.php:364
+#: wp-admin/install.php:361
 msgid "You must provide an email address."
 msgstr "您必须提供电子邮件地址。"
 
-#: wp-admin/install.php:359
+#: wp-admin/install.php:357
 msgid "Your passwords do not match. Please try again."
 msgstr "您两次输入的密码不符，请重试。"
 
-#: wp-admin/install.php:354
+#: wp-admin/install.php:353
 msgid "The username you provided has invalid characters."
 msgstr "您提供的用户名包含非法字符。"
 
@@ -8694,7 +8694,7 @@ msgstr "添加"
 msgid "Add New Link"
 msgstr "添加链接"
 
-#: wp-admin/install.php:388
+#: wp-admin/install.php:374
 msgid "Success!"
 msgstr "成功！"
 
